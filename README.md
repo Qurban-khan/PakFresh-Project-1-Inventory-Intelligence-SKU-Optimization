@@ -1,6 +1,6 @@
 # PakFresh Consumer Products Ltd. — Supply Chain Analytics Portfolio
 
-![Dashboard screenshot](PakFresh Inventory Intel Dashboard.png)
+!(PakFresh Inventory Intel Dashboard.png)
 
 A synthetic FMCG supply-chain dataset and three end-to-end Power BI analytics
 projects — built to demonstrate supply chain analysis, data modeling, DAX,
