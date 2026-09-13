@@ -1,0 +1,131 @@
+table DimSupplier
+	lineageTag: 58121e7f-292c-46fe-b11c-4825fed3b9b7
+
+	column SupplierID
+		dataType: string
+		lineageTag: 16dd8e39-bbba-401c-aaeb-05d2e5b23d39
+		summarizeBy: none
+		sourceColumn: SupplierID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierName
+		dataType: string
+		lineageTag: d16b80e0-677b-40a7-9ac1-80cdea3e402d
+		summarizeBy: none
+		sourceColumn: SupplierName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 3296e5a3-f631-4708-b321-ba77eeb99dbc
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 7cd03fb2-d804-4274-bcfd-be7b17968d51
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierType
+		dataType: string
+		lineageTag: 1df377ae-634d-43b2-ae27-39a2d023270f
+		summarizeBy: none
+		sourceColumn: SupplierType
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentTerms
+		dataType: string
+		lineageTag: 8b039300-20c9-4e69-940c-4d34b5ca060e
+		summarizeBy: none
+		sourceColumn: PaymentTerms
+
+		annotation SummarizationSetBy = Automatic
+
+	column ContractStart
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4d3b2362-7a9f-40a4-93af-d131b6ff4135
+		summarizeBy: none
+		sourceColumn: ContractStart
+
+		variation Variation
+			isDefault
+			relationship: eff78e0b-3ee8-440d-86d0-bb97d1cc24ba
+			defaultHierarchy: LocalDateTable_428c08a2-55f8-43e8-9125-a7b67732cb42.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ContractEnd
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4364fd4d-379d-4ba6-90e4-6ffbd3b53443
+		summarizeBy: none
+		sourceColumn: ContractEnd
+
+		variation Variation
+			isDefault
+			relationship: 1a6ea24d-2937-46eb-a56f-f2a140c7328b
+			defaultHierarchy: LocalDateTable_b877450f-1674-489f-ab0f-988124e982d9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DefaultLeadTimeDays
+		dataType: int64
+		formatString: 0
+		lineageTag: a469aff6-353b-4117-8344-576a06e6931a
+		summarizeBy: sum
+		sourceColumn: DefaultLeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetOTIF
+		dataType: double
+		lineageTag: 347a94cc-3517-4114-ba06-685d1189381f
+		summarizeBy: sum
+		sourceColumn: TargetOTIF
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TargetQuality
+		dataType: double
+		lineageTag: dc13a7de-cb7c-4386-9b97-1f99cdf707bd
+		summarizeBy: sum
+		sourceColumn: TargetQuality
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SupplyCategory
+		dataType: string
+		lineageTag: 359cab92-cf49-4bf5-bcbb-5c19875a5e37
+		summarizeBy: none
+		sourceColumn: SupplyCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimSupplier = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\PakFresh_FMCG_Master_Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimSupplier", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"SupplierID", type text}, {"SupplierName", type text}, {"Country", type text}, {"Region", type text}, {"SupplierType", type text}, {"PaymentTerms", type text}, {"ContractStart", type date}, {"ContractEnd", type date}, {"DefaultLeadTimeDays", Int64.Type}, {"TargetOTIF", type number}, {"TargetQuality", type number}, {"SupplyCategory", type text}}, "en-US")
+				in
+				  #"Changed column type"
+

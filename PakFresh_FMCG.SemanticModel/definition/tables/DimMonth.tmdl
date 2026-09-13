@@ -1,0 +1,57 @@
+table DimMonth
+	lineageTag: 56a58903-7b9d-4908-b618-a9b67036ca5e
+
+	column MonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: a1165448-1ca7-409b-8d91-34314491dc7b
+		summarizeBy: none
+		sourceColumn: MonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 481adc78-0792-486c-8831-83c84c6d9e61
+		summarizeBy: none
+		sourceColumn: MonthNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: 1bb6a85f-66d7-4f0c-a0c0-03bc24865fe4
+		summarizeBy: none
+		sourceColumn: MonthName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: a6cb0672-2e27-48c9-a792-89428d88ac1e
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Season
+		dataType: string
+		lineageTag: a65f176c-a23c-43f0-b528-f86c47b8d305
+		summarizeBy: none
+		sourceColumn: Season
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimMonth = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\PakFresh_FMCG_Master_Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimMonth", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"MonthKey", Int64.Type}, {"MonthNo", Int64.Type}, {"MonthName", type text}, {"Year", Int64.Type}, {"Season", type text}}, "en-US")
+				in
+				  #"Changed column type"
+

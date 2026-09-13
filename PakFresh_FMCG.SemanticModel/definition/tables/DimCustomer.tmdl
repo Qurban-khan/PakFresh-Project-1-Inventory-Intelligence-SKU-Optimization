@@ -1,0 +1,94 @@
+table DimCustomer
+	lineageTag: f559d464-9bbe-4011-8a01-4008ea856ff0
+
+	column CustomerID
+		dataType: string
+		lineageTag: c471e67f-e78d-47fc-8bc7-b71b14682858
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerName
+		dataType: string
+		lineageTag: 91ad5607-c70e-4258-811c-fee98302d1da
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerType
+		dataType: string
+		lineageTag: 3b92239b-9e54-480d-9602-94a47aa29efa
+		summarizeBy: none
+		sourceColumn: CustomerType
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 1d91c924-9371-4eee-b06e-9d2c24d45139
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Province
+		dataType: string
+		lineageTag: 97e46dd2-bd79-4fa8-983d-06061446161d
+		summarizeBy: none
+		sourceColumn: Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: a0a187d0-db3d-4fc0-aab5-7b78c7cb998c
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerSegment
+		dataType: string
+		lineageTag: 306f6cad-01f2-4fba-a4c3-cca2edd096f6
+		summarizeBy: none
+		sourceColumn: CustomerSegment
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentTerms
+		dataType: string
+		lineageTag: 8c389a98-dd3f-41fa-8aa8-a9a59045cc13
+		summarizeBy: none
+		sourceColumn: PaymentTerms
+
+		annotation SummarizationSetBy = Automatic
+
+	column OnboardDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: aee84d48-b763-4ddd-af7a-8ab916fb7a45
+		summarizeBy: none
+		sourceColumn: OnboardDate
+
+		variation Variation
+			isDefault
+			relationship: 89808ba2-4f1d-40b8-b4cd-3b3e8cadb649
+			defaultHierarchy: LocalDateTable_f33def01-ef27-441b-b540-bf2c4ea9dada.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition DimCustomer = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\PakFresh_FMCG_Master_Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimCustomer", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"CustomerID", type text}, {"CustomerName", type text}, {"CustomerType", type text}, {"City", type text}, {"Province", type text}, {"Region", type text}, {"CustomerSegment", type text}, {"PaymentTerms", type text}, {"OnboardDate", type date}}, "en-US")
+				in
+				  #"Changed column type"
+

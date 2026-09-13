@@ -1,0 +1,192 @@
+table FactPurchaseOrders
+	lineageTag: e36c8a9d-b2db-498f-b51a-f65494eee6c7
+
+	column POID
+		dataType: string
+		lineageTag: 517f4449-9a80-4d11-8396-8ff6ec9e903e
+		summarizeBy: none
+		sourceColumn: POID
+
+		annotation SummarizationSetBy = Automatic
+
+	column POLineID
+		dataType: string
+		lineageTag: eb493358-dff0-4d80-8316-067589121a27
+		summarizeBy: none
+		sourceColumn: POLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 06f8e431-40e4-4305-a151-2c6ccb424438
+		summarizeBy: count
+		sourceColumn: OrderDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: e041e22f-95bc-44ae-b152-eddb14baef55
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierID
+		dataType: string
+		lineageTag: 7b0bf591-d6e6-498b-8834-b6ff2c84d3cd
+		summarizeBy: none
+		sourceColumn: SupplierID
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseID
+		dataType: string
+		lineageTag: f99013c6-f799-4f63-86eb-667c4d6aaed1
+		summarizeBy: none
+		sourceColumn: WarehouseID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PromisedDeliveryDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: cf8988dd-bd28-4c66-a729-f252a3f5f51d
+		summarizeBy: count
+		sourceColumn: PromisedDeliveryDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActualDeliveryDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 279e7f82-b4f0-4898-bfbf-0697225053f2
+		summarizeBy: none
+		sourceColumn: ActualDeliveryDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderedQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a0a2d7c-3025-4cd7-8ec5-0d1be305fdb3
+		summarizeBy: sum
+		sourceColumn: OrderedQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReceivedQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 8027a54a-889c-4553-9b47-c7184832229b
+		summarizeBy: sum
+		sourceColumn: ReceivedQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column RejectedQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 115aacc6-38eb-4282-8693-1eaac072d445
+		summarizeBy: sum
+		sourceColumn: RejectedQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column GoodReceivedQty
+		dataType: int64
+		formatString: 0
+		lineageTag: ee783116-1d84-451e-9e79-f5cede06e4f4
+		summarizeBy: sum
+		sourceColumn: GoodReceivedQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPurchasePrice
+		dataType: double
+		lineageTag: 519f559c-83aa-4e0b-baa9-4b88552ac339
+		summarizeBy: sum
+		sourceColumn: UnitPurchasePrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column POValue
+		dataType: double
+		lineageTag: 231aa072-e8a4-4034-919a-e9f0169f422a
+		summarizeBy: sum
+		sourceColumn: POValue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column FreightCost
+		dataType: double
+		lineageTag: 1becba99-1c61-4767-9164-b11a993ea28f
+		summarizeBy: sum
+		sourceColumn: FreightCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OnTimeFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: b632d1a5-3c56-4a25-87ec-a24f74d54338
+		summarizeBy: sum
+		sourceColumn: OnTimeFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column InFullFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: 45bf7028-9233-4994-bcc9-d7af3ecbe981
+		summarizeBy: sum
+		sourceColumn: InFullFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column OTIFFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: 4895c0b5-2f8c-46d1-ae02-90ae6c0af9e9
+		summarizeBy: sum
+		sourceColumn: OTIFFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column DisruptedFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f027425-bf72-4063-b056-129dede4619b
+		summarizeBy: sum
+		sourceColumn: DisruptedFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column CapacityConstraintFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: 11d344c2-c622-47b1-8a8c-8c607e11615c
+		summarizeBy: sum
+		sourceColumn: CapacityConstraintFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactPurchaseOrders = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\FactPurchaseOrders.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "FactPurchaseOrders", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"POID", type text}, {"POLineID", type text}, {"OrderDateKey", Int64.Type}, {"SKU", type text}, {"SupplierID", type text}, {"WarehouseID", type text}, {"PromisedDeliveryDateKey", Int64.Type}, {"ActualDeliveryDateKey", Int64.Type}, {"OrderedQty", Int64.Type}, {"ReceivedQty", Int64.Type}, {"RejectedQty", Int64.Type}, {"GoodReceivedQty", Int64.Type}, {"UnitPurchasePrice", type number}, {"POValue", type number}, {"FreightCost", type number}, {"OnTimeFlag", Int64.Type}, {"InFullFlag", Int64.Type}, {"OTIFFlag", Int64.Type}, {"DisruptedFlag", Int64.Type}, {"CapacityConstraintFlag", Int64.Type}}, "en-US")
+				in
+				  #"Changed column type"
+

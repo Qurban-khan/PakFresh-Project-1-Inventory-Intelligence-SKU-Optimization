@@ -1,0 +1,239 @@
+table FactInventory
+	lineageTag: 512d55ae-ffec-4395-84c2-1e6e76be3252
+
+	measure 'Inventory Units' = SUM(FactInventory[ClosingInventory])
+		lineageTag: 4dc9f305-e988-40d2-bd8f-648fc6174049
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Inventory Value' = SUM(FactInventory[InventoryValue])
+		lineageTag: 8ae1feed-f9f7-42cc-8962-3b735695b640
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Inventory Value' =
+			
+			AVERAGEX(
+			    VALUES(FactInventory[DateKey]),
+			    CALCULATE(SUM(FactInventory[InventoryValue]))
+			)
+		lineageTag: 8cbe323e-adaf-42e7-98c0-fa9816b83624
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Inventory Units' =
+			
+			AVERAGEX(
+			    VALUES(FactInventory[DateKey]),
+			    CALCULATE(SUM(FactInventory[ClosingInventory]))
+			)
+		lineageTag: 0f3e311a-7087-43d1-a1ac-ac4330e81935
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Inventory Turnover' = DIVIDE([Total COGS], [Avg Inventory Value])
+		lineageTag: d107aea6-4701-4f33-8213-7c2b981ac757
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure DIO = DIVIDE(365, [Inventory Turnover])
+		lineageTag: 768f0227-fc65-4090-a1b9-8431359e9f61
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Daily Sales' = DIVIDE([Units Sold], DISTINCTCOUNT(FactSales[DateKey]))
+		lineageTag: a85c067b-f8d1-40c0-8671-19218b6512ee
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Lost Sales Units' = SUM(FactSales[LostSalesQty])
+		formatString: 0
+		lineageTag: 8b672c10-5dfc-45cb-baca-a1c83bbbcd3b
+
+	measure 'Lost Sales Value' = SUMX(FactSales, FactSales[LostSalesQty] * FactSales[UnitPrice])
+		lineageTag: d9655a07-781e-423e-9e73-1c73f24dc539
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fill Rate' = 1 - DIVIDE([Lost Sales Units], [Units Sold] + [Lost Sales Units])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 738def3d-fe79-4d05-8a70-80cb8586619e
+
+	measure 'Slow Moving Inventory Value' =
+			
+			CALCULATE(
+			    [Avg Inventory Value],
+			    FILTER(DimProduct, DimProduct[DemandClass] IN {"Slow", "Very Slow"})
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8861c0f9-4959-4b68-910c-be6fe86e6232
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Stock Cover Days' = DIVIDE([Avg Inventory Units], [Avg Daily Sales])
+		lineageTag: 919d2ab6-75a3-4a58-9f07-28d6da85d297
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Stockout Rate' =
+			
+			DIVIDE(
+			    [Stockout Days],
+			    DISTINCTCOUNT(FactInventory[DateKey]) * 7 *
+			    COUNTROWS(SUMMARIZE(FactInventory, FactInventory[SKU], FactInventory[WarehouseID]))
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b42ec88e-17ff-4868-b0fd-5d2905346068
+
+	measure 'Stockout Days' = SUM(FactInventory[StockoutDaysInWeek])
+		lineageTag: f9ee3a8c-7da3-47d6-9a48-a8334a8da62b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column InventoryID
+		dataType: string
+		lineageTag: c411e20b-fdaa-43b1-9f16-d6815729918c
+		summarizeBy: none
+		sourceColumn: InventoryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e917dea-3c8e-430c-ba2b-27aba15bee20
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 3909bec9-edc2-44e1-a208-bc0d1ce9a7e2
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseID
+		dataType: string
+		lineageTag: 43745842-12e4-4427-b798-149cf358e6da
+		summarizeBy: none
+		sourceColumn: WarehouseID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OpeningInventory
+		dataType: double
+		lineageTag: 032f2d44-227a-480a-ae27-427c27d1a334
+		summarizeBy: sum
+		sourceColumn: OpeningInventory
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Receipts
+		dataType: int64
+		formatString: 0
+		lineageTag: dba61e77-8abc-4d7c-bec7-988803eead1f
+		summarizeBy: sum
+		sourceColumn: Receipts
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sales
+		dataType: double
+		lineageTag: a2f9a9de-96ce-4246-b65d-a75a04e8f500
+		summarizeBy: sum
+		sourceColumn: Sales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Adjustments
+		dataType: int64
+		formatString: 0
+		lineageTag: c058cb6d-a7af-4da0-b21f-237097243ce3
+		summarizeBy: sum
+		sourceColumn: Adjustments
+
+		annotation SummarizationSetBy = Automatic
+
+	column TransfersOut
+		dataType: int64
+		formatString: 0
+		lineageTag: 89912006-d4ae-4192-a060-6a9fd8e4d33a
+		summarizeBy: sum
+		sourceColumn: TransfersOut
+
+		annotation SummarizationSetBy = Automatic
+
+	column TransfersIn
+		dataType: int64
+		formatString: 0
+		lineageTag: 6706160e-4f24-4261-8118-89fc822433ff
+		summarizeBy: sum
+		sourceColumn: TransfersIn
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClosingInventory
+		dataType: double
+		lineageTag: 00a21dfc-c979-4d38-9841-ceb38b4ec319
+		summarizeBy: sum
+		sourceColumn: ClosingInventory
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column InventoryValue
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: c8e249ce-cc76-470a-883b-bd7076e5b965
+		summarizeBy: sum
+		sourceColumn: InventoryValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaysOfCover
+		dataType: double
+		lineageTag: e7c974dc-3042-4541-8807-d6f4433bfb47
+		summarizeBy: sum
+		sourceColumn: DaysOfCover
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LostSalesUnits
+		dataType: int64
+		formatString: 0
+		lineageTag: 769bb3d2-c509-4624-9153-5ab5c3c76ae0
+		summarizeBy: sum
+		sourceColumn: LostSalesUnits
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockoutDaysInWeek
+		dataType: int64
+		formatString: 0
+		lineageTag: 51732033-cf10-4d1c-b228-7ecfd1c4a8ea
+		summarizeBy: sum
+		sourceColumn: StockoutDaysInWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactInventory = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\FactInventory.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "FactInventory", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"InventoryID", type text}, {"DateKey", Int64.Type}, {"SKU", type text}, {"WarehouseID", type text}, {"OpeningInventory", type number}, {"Receipts", Int64.Type}, {"Sales", type number}, {"Adjustments", Int64.Type}, {"TransfersOut", Int64.Type}, {"TransfersIn", Int64.Type}, {"ClosingInventory", type number}, {"InventoryValue", type number}, {"DaysOfCover", type number}, {"LostSalesUnits", Int64.Type}, {"StockoutDaysInWeek", Int64.Type}}, "en-US")
+				in
+				  #"Changed column type"
+

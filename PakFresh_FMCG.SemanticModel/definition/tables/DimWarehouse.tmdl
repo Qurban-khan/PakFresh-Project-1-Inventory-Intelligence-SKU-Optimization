@@ -1,0 +1,71 @@
+table DimWarehouse
+	lineageTag: 1c9894c2-7f60-46d2-bb9a-08aa456f2d17
+
+	column WarehouseID
+		dataType: string
+		lineageTag: 8c4f5d1c-e76f-4e14-bb9d-9aa1d7a075be
+		summarizeBy: none
+		sourceColumn: WarehouseID
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseName
+		dataType: string
+		lineageTag: 29d8b578-d469-4a30-9b77-60d110c764c2
+		summarizeBy: none
+		sourceColumn: WarehouseName
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: d7a2d7ad-e58c-49c7-a3c6-8823c7315330
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Province
+		dataType: string
+		lineageTag: b3421249-1b3b-444f-a9f7-b2d957352e01
+		summarizeBy: none
+		sourceColumn: Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 78600ebe-52af-4dcb-894f-2abf3405bac0
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column CapacityCases
+		dataType: int64
+		formatString: 0
+		lineageTag: f1bec62c-5e67-4355-84d9-3451179fd76d
+		summarizeBy: sum
+		sourceColumn: CapacityCases
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseType
+		dataType: string
+		lineageTag: e4626d1d-9d79-40d8-bb1b-567b5876c1ed
+		summarizeBy: none
+		sourceColumn: WarehouseType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimWarehouse = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\PakFresh_FMCG_Master_Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimWarehouse", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"WarehouseID", type text}, {"WarehouseName", type text}, {"City", type text}, {"Province", type text}, {"Region", type text}, {"CapacityCases", Int64.Type}, {"WarehouseType", type text}}, "en-US")
+				in
+				  #"Changed column type"
+

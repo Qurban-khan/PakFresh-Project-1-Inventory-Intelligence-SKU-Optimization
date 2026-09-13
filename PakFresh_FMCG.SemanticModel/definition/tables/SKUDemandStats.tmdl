@@ -1,0 +1,43 @@
+table SKUDemandStats
+	lineageTag: 20c48de0-2b9e-41c1-85a8-6a929b7c615b
+
+	column SKU
+		dataType: string
+		lineageTag: 417e0149-1bdf-4583-813d-38a12250f106
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Demand Mean'
+		dataType: string
+		lineageTag: 032855ce-4c2b-468b-81bf-4ffc6ddd97ac
+		summarizeBy: none
+		sourceColumn: Demand Mean
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Demand StdDev'
+		dataType: string
+		lineageTag: 94b5335a-a947-4d97-ac3c-462332c0e7ae
+		summarizeBy: none
+		sourceColumn: Demand StdDev
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SKUDemandStats = m
+		mode: import
+		source =
+				let
+				    Source = WeeklySalesbySKU,
+				    #"Grouped Rows" = Table.Group(Source, {"SKU"}, {{"WeeklyData", each _, type table [SKU=nullable text, WeekKey=number, Quantity_Sold=nullable number]}}),
+				    #"Added Custom" = Table.AddColumn(#"Grouped Rows", "Demand Mean", each List.Average([WeeklyData][Quantity_Sold])),
+				    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Demand StdDev", each List.StandardDeviation([WeeklyData][Quantity_Sold])),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Custom1",{"WeeklyData"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

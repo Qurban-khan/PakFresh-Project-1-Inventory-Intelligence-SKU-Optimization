@@ -1,0 +1,113 @@
+table FactPromotions
+	lineageTag: 38896619-129e-4af6-aec1-fb061d44e7ce
+
+	column PromotionID
+		dataType: string
+		lineageTag: 3114e0c1-0167-4f46-b5d9-01778600df0d
+		summarizeBy: none
+		sourceColumn: PromotionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 65c7057d-3e56-45f1-b7d6-e9e645a0d55c
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelID
+		dataType: string
+		lineageTag: bb0d65e7-ef07-4319-9338-a30e2ca12d74
+		summarizeBy: none
+		sourceColumn: ChannelID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StartDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e8fdd98-57e1-429c-a9d3-9723aad6faf4
+		summarizeBy: count
+		sourceColumn: StartDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 63388f4b-6068-4674-87f2-c1c8f1ecc6d2
+		summarizeBy: none
+		sourceColumn: EndDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DurationDays
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c4f9a70-e1e2-4c3f-8bc5-67c9a4292e1b
+		summarizeBy: sum
+		sourceColumn: DurationDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column PromotionType
+		dataType: string
+		lineageTag: a1cc8ce1-c4f5-41db-8f26-70a8f8a105e8
+		summarizeBy: none
+		sourceColumn: PromotionType
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiscountPct
+		dataType: double
+		lineageTag: b0781543-e205-47a0-88d3-a8e75c1465fa
+		summarizeBy: sum
+		sourceColumn: DiscountPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column BaselineDemand
+		dataType: double
+		lineageTag: 41960a87-e181-413c-a9ec-c36da4e65524
+		summarizeBy: sum
+		sourceColumn: BaselineDemand
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PromotionDemand
+		dataType: double
+		lineageTag: cc853c7c-2b7d-48b2-bf2d-24e75d4123dc
+		summarizeBy: sum
+		sourceColumn: PromotionDemand
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UpliftUnits
+		dataType: double
+		lineageTag: 416f1a13-e77f-4632-9020-a84f18a1470c
+		summarizeBy: sum
+		sourceColumn: UpliftUnits
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FactPromotions = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\FactPromotions.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "FactPromotions", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"PromotionID", type text}, {"SKU", type text}, {"ChannelID", type text}, {"StartDateKey", Int64.Type}, {"EndDateKey", Int64.Type}, {"DurationDays", Int64.Type}, {"PromotionType", type text}, {"DiscountPct", type number}, {"BaselineDemand", type number}, {"PromotionDemand", type number}, {"UpliftUnits", type number}}, "en-US")
+				in
+				  #"Changed column type"
+

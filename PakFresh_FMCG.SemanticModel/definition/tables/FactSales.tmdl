@@ -1,0 +1,247 @@
+table FactSales
+	lineageTag: dd787a65-28c4-4a8a-a21f-5466e5dc0d27
+
+	measure 'Total Revenue' = SUM(FactSales[NetRevenue])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: d63ea75b-5340-4f9c-8781-6dc2b3c066dd
+
+	measure 'Units Sold' = SUM(FactSales[QuantitySold])
+		formatString: #,0.00
+		lineageTag: ac009b5d-8df8-4189-b943-8e1941eb42fb
+
+	measure 'Avg Selling Price' = DIVIDE([Total Revenue],[Units Sold])
+		lineageTag: 5383896f-e5de-4ecd-bb80-a11f98a6976f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total COGS' = SUM(FactSales[COGS])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 63ba9624-b957-4fc7-a5e1-38112d15392b
+
+	measure 'Gross Profit' = SUM(FactSales[GrossProfit])
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 6513568f-fbcf-4226-a985-71236cc38490
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Gross Profit %' = DIVIDE([Gross Profit], [Total Revenue])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ab48968e-eeb7-467a-817d-45cf48ea0707
+
+	measure 'Gross Profit Rank' = RANKX(ALL(DimProduct[SKU]),[Gross Profit %],,DESC,Dense)
+		formatString: 0
+		lineageTag: b1927535-13fd-4944-aa22-9006f6f4f669
+
+	measure 'Cumulative Gross Profit' = Var CurrentRank = [Gross Profit Rank] Return SUMX(FILTER(ALLSELECTED(DimProduct[SKU]), [Gross Profit Rank] <= CurrentRank), [Gross Profit])
+		formatString: 0
+		lineageTag: 8e6bb24d-a26e-413b-9549-3b9c83bafeca
+
+	measure ABC = IF([Cumulative Gross Profit %] <= .80, "A", IF([Cumulative Gross Profit %] <=.95, "B","C"))
+		lineageTag: 892b3730-0089-407a-bf58-f59c68c009b7
+
+	measure 'Cumulative Gross Profit %' = DIVIDE([Cumulative Gross Profit], CALCULATE([Cumulative Gross Profit], ALL(DimProduct[SKU])))
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		lineageTag: ec037fd4-fe5f-4617-ac19-6442ade3e869
+
+	column SalesID
+		dataType: string
+		lineageTag: 329a6871-d062-471c-863b-cd7d575e7557
+		summarizeBy: none
+		sourceColumn: SalesID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderID
+		dataType: string
+		lineageTag: f72453f8-0424-4bfc-b6e6-167d976f79d4
+		summarizeBy: none
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderLineID
+		dataType: string
+		lineageTag: fabacdc5-991b-4622-8b7e-8660385338f9
+		summarizeBy: none
+		sourceColumn: OrderLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: b05faabe-07f5-4f0c-a708-d76b5f3fac05
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 0a6fded5-c6f2-4402-b691-17b0de8ba761
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: string
+		lineageTag: e9a07474-6560-4767-8b0d-d64b95fa03a2
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseID
+		dataType: string
+		lineageTag: d10d6c87-a2c5-490f-9534-ebc8ca42d818
+		summarizeBy: none
+		sourceColumn: WarehouseID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelID
+		dataType: string
+		lineageTag: 64acbdf0-2527-4a96-9428-3292151920c1
+		summarizeBy: none
+		sourceColumn: ChannelID
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuantityOrdered
+		dataType: int64
+		formatString: 0
+		lineageTag: 27a3c72f-fb87-48a2-a287-b79d01e7dfaa
+		summarizeBy: sum
+		sourceColumn: QuantityOrdered
+
+		annotation SummarizationSetBy = Automatic
+
+	column PotentialDemand
+		dataType: int64
+		formatString: 0
+		lineageTag: f6bbeca8-b7fa-488d-ab70-63491bcfe358
+		summarizeBy: sum
+		sourceColumn: PotentialDemand
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuantitySold
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ae9c33d-7866-4ced-b6a3-46b001b8410f
+		summarizeBy: sum
+		sourceColumn: QuantitySold
+
+		annotation SummarizationSetBy = Automatic
+
+	column LostSalesQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c9ca44e-2f17-4f8a-b171-ad00e715bf5b
+		summarizeBy: sum
+		sourceColumn: LostSalesQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: double
+		lineageTag: 56c5a7fc-a85f-4c72-8a6d-fe8572f473ea
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DiscountPct
+		dataType: double
+		lineageTag: 32925e32-6f8a-4c17-aa3b-c9c40b30100e
+		summarizeBy: sum
+		sourceColumn: DiscountPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossRevenue
+		dataType: double
+		lineageTag: 56a2f6e0-022e-4d33-ba2c-d8c9ee735521
+		summarizeBy: sum
+		sourceColumn: GrossRevenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DiscountAmount
+		dataType: double
+		lineageTag: e915a951-bf9c-4f3d-8ee6-8eaefbdb4ce4
+		summarizeBy: sum
+		sourceColumn: DiscountAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NetRevenue
+		dataType: double
+		lineageTag: 66890571-d5a1-40ae-b8fa-bc4709232e36
+		summarizeBy: sum
+		sourceColumn: NetRevenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnitCost
+		dataType: double
+		lineageTag: b2a99d5b-4b64-4edc-8da4-4155a2bac85d
+		summarizeBy: sum
+		sourceColumn: UnitCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column COGS
+		dataType: double
+		lineageTag: 9daf10cb-8301-447c-93f8-62c493d7dbf0
+		summarizeBy: sum
+		sourceColumn: COGS
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossProfit
+		dataType: double
+		lineageTag: 34b25c23-f54a-4b9f-b3c6-135f2693d1d9
+		summarizeBy: sum
+		sourceColumn: GrossProfit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossMarginPct
+		dataType: double
+		lineageTag: 160486ee-9e88-4be3-99d2-4d74823c8c3f
+		summarizeBy: sum
+		sourceColumn: GrossMarginPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FactSales = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\FactSales.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "FactSales", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"SalesID", type text}, {"OrderID", type text}, {"OrderLineID", type text}, {"DateKey", Int64.Type}, {"SKU", type text}, {"CustomerID", type text}, {"WarehouseID", type text}, {"ChannelID", type text}, {"QuantityOrdered", Int64.Type}, {"PotentialDemand", Int64.Type}, {"QuantitySold", Int64.Type}, {"LostSalesQty", Int64.Type}, {"UnitPrice", type number}, {"DiscountPct", type number}, {"GrossRevenue", type number}, {"DiscountAmount", type number}, {"NetRevenue", type number}, {"UnitCost", type number}, {"COGS", type number}, {"GrossProfit", type number}, {"GrossMarginPct", type number}}, "en-US")
+				in
+				  #"Changed column type"
+

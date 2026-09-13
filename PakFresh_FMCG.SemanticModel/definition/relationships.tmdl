@@ -1,0 +1,129 @@
+relationship 908e54bb-6f43-4741-9789-d2b71dea8e67
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimDate.Date
+	toColumn: LocalDateTable_edcf435b-39c8-4139-8dcb-99868523175c.Date
+
+relationship eff78e0b-3ee8-440d-86d0-bb97d1cc24ba
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimSupplier.ContractStart
+	toColumn: LocalDateTable_428c08a2-55f8-43e8-9125-a7b67732cb42.Date
+
+relationship 1a6ea24d-2937-46eb-a56f-f2a140c7328b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimSupplier.ContractEnd
+	toColumn: LocalDateTable_b877450f-1674-489f-ab0f-988124e982d9.Date
+
+relationship 89808ba2-4f1d-40b8-b4cd-3b3e8cadb649
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimCustomer.OnboardDate
+	toColumn: LocalDateTable_f33def01-ef27-441b-b540-bf2c4ea9dada.Date
+
+relationship a6d0394a-6113-46a4-959a-ef0544498234
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimProduct.LaunchDate
+	toColumn: LocalDateTable_773f8e7f-9441-411e-aaed-03cecf23363a.Date
+
+relationship AutoDetected_2079caf1-a952-48ad-b9fd-6b1c79f8e7fe
+	fromColumn: FactSales.DateKey
+	toColumn: DimDate.DateKey
+
+relationship AutoDetected_ac120222-f9fe-418a-b490-b2619c24eba4
+	fromColumn: FactInventory.DateKey
+	toColumn: DimDate.DateKey
+
+relationship AutoDetected_c30c4cc4-f47f-4d83-aaef-616b33eb23a2
+	fromColumn: FactSales.SKU
+	toColumn: DimProduct.SKU
+
+relationship AutoDetected_83df4be6-93e2-4f28-9113-8f4fd73613fe
+	fromColumn: FactForecast.SKU
+	toColumn: DimProduct.SKU
+
+relationship AutoDetected_318ae11e-be11-4313-a009-e8a420231e31
+	fromColumn: FactInventory.SKU
+	toColumn: DimProduct.SKU
+
+relationship AutoDetected_09da6d4a-125d-4f75-82df-7c224f97c651
+	fromColumn: FactPromotions.SKU
+	toColumn: DimProduct.SKU
+
+relationship AutoDetected_c3514f8b-dc95-434e-9b57-92b723f135ba
+	fromColumn: FactPurchaseOrders.SKU
+	toColumn: DimProduct.SKU
+
+relationship AutoDetected_d4ca2349-4801-4e58-a20c-dd6e0b119fd1
+	fromColumn: FactSales.CustomerID
+	toColumn: DimCustomer.CustomerID
+
+relationship AutoDetected_55683083-0120-4c0f-aa80-4a26e28f79f0
+	fromColumn: FactSales.WarehouseID
+	toColumn: DimWarehouse.WarehouseID
+
+relationship AutoDetected_7816cb2b-6133-4de2-93de-66891f2ecfa2
+	fromColumn: FactInventory.WarehouseID
+	toColumn: DimWarehouse.WarehouseID
+
+relationship AutoDetected_c6c805d3-07a6-450c-947e-1444c449f876
+	fromColumn: FactPurchaseOrders.WarehouseID
+	toColumn: DimWarehouse.WarehouseID
+
+relationship AutoDetected_3813dcef-d4c1-4799-b532-6ac7fbd12f22
+	fromColumn: FactPurchaseOrders.SupplierID
+	toColumn: DimSupplier.SupplierID
+
+relationship AutoDetected_1bed89ce-a170-44fe-88bf-2f78660d8e61
+	isActive: false
+	fromColumn: DimProduct.SupplierID
+	toColumn: DimSupplier.SupplierID
+
+relationship AutoDetected_e57dd4a3-8bad-46b6-9a3c-590f9b13a1db
+	isActive: false
+	fromColumn: DimCustomer.City
+	toColumn: DimWarehouse.City
+
+relationship AutoDetected_99604a10-2e89-4686-b8f0-cefca97fbbb0
+	fromColumn: FactSales.ChannelID
+	toColumn: DimChannel.ChannelID
+
+relationship AutoDetected_f4028c95-92a1-45fa-9584-39fc4fbdbd48
+	fromColumn: FactPromotions.ChannelID
+	toColumn: DimChannel.ChannelID
+
+relationship 4460d225-5d9f-5fba-6ab8-1d3af5494652
+	fromColumn: FactPurchaseOrders.ActualDeliveryDateKey
+	toColumn: DimDate.DateKey
+
+relationship fa9580bc-e608-2c2b-b1ab-7880c4c1615b
+	isActive: false
+	fromColumn: FactPurchaseOrders.OrderDateKey
+	toColumn: DimDate.DateKey
+
+relationship 5af28437-075e-ac7f-cb53-b226d459207f
+	isActive: false
+	fromColumn: FactPurchaseOrders.PromisedDeliveryDateKey
+	toColumn: DimDate.DateKey
+
+relationship a66f5b21-02e4-61f9-1b46-02186f5b35db
+	fromColumn: FactPromotions.EndDateKey
+	toColumn: DimDate.DateKey
+
+relationship a7b15378-8947-4c58-7524-d36fda5cd371
+	isActive: false
+	fromColumn: FactPromotions.StartDateKey
+	toColumn: DimDate.DateKey
+
+relationship 7b16ef82-350d-f421-cb93-5a8774f3ede7
+	fromColumn: FactForecast.ForecastMonthKey
+	toColumn: DimMonth.MonthKey
+
+relationship AutoDetected_a658060b-9d57-4c31-9cd4-3b5e9b75b68a
+	isActive: false
+	fromColumn: WeeklySalesbySKU.SKU
+	toColumn: DimProduct.SKU
+
+relationship AutoDetected_1c3733e5-dfb4-45aa-9ac1-28c0cde39108
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: SKUDemandStats.SKU
+	toColumn: DimProduct.SKU
+

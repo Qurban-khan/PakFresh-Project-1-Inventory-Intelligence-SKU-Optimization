@@ -1,0 +1,119 @@
+table DimDate
+	lineageTag: 89008323-e222-451a-a058-4bba4c89388c
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 84f9865c-d82b-43d7-9a5a-d7daf1c9cd42
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 908e54bb-6f43-4741-9789-d2b71dea8e67
+			defaultHierarchy: LocalDateTable_edcf435b-39c8-4139-8dcb-99868523175c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d19e5c8-764d-41f4-9dbf-39dd890393b5
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNo
+		dataType: int64
+		formatString: 0
+		lineageTag: d2f9df81-6f72-46e5-aaa7-ee39d9548cb9
+		summarizeBy: sum
+		sourceColumn: MonthNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: abb5b356-c601-4cca-94b4-6ba247491474
+		summarizeBy: none
+		sourceColumn: MonthName
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 25a6f002-3c56-4633-95d8-9840184880b4
+		summarizeBy: sum
+		sourceColumn: WeekNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: ad4d7bed-a311-410f-a481-948a665309bd
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayName
+		dataType: string
+		lineageTag: d12befe0-5f90-447f-87fe-64a24cff5d84
+		summarizeBy: none
+		sourceColumn: DayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b78fb6fd-d5db-41b3-adef-6946da8c43cb
+		summarizeBy: none
+		sourceColumn: IsWeekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 1384f610-490b-47d4-beac-bca61b7872d7
+		summarizeBy: sum
+		sourceColumn: DayOfYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column Season
+		dataType: string
+		lineageTag: 1a2263a8-5b35-4adf-9285-0d7b9cc14282
+		summarizeBy: none
+		sourceColumn: Season
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: c642bfc2-e269-40dc-a1b0-5dc8ba475c2a
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimDate = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\PakFresh_FMCG_Master_Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimDate", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Date", type date}, {"Year", Int64.Type}, {"MonthNo", Int64.Type}, {"MonthName", type text}, {"WeekNo", Int64.Type}, {"Day", Int64.Type}, {"DayName", type text}, {"IsWeekend", type logical}, {"DayOfYear", Int64.Type}, {"Season", type text}, {"DateKey", Int64.Type}}, "en-US")
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

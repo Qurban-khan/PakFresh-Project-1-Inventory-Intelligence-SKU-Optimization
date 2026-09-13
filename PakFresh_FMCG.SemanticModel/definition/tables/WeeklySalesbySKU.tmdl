@@ -1,0 +1,49 @@
+table WeeklySalesbySKU
+	lineageTag: aeee6cc2-9dc0-458f-b31a-90e4136ff03b
+
+	column SKU
+		dataType: string
+		lineageTag: fa82abb9-7b7a-4a60-84a0-67d420ecee9b
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekKey
+		dataType: string
+		lineageTag: 7170b723-0ef0-4e88-ab0b-b4ea58ee273f
+		summarizeBy: none
+		sourceColumn: WeekKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity_Sold
+		dataType: double
+		lineageTag: e8fa5fcb-4784-40e4-988f-73057450798d
+		summarizeBy: sum
+		sourceColumn: Quantity_Sold
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition WeeklySalesbySKU = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\FactSales.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "FactSales", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"SalesID", type text}, {"OrderID", type text}, {"OrderLineID", type text}, {"DateKey", Int64.Type}, {"SKU", type text}, {"CustomerID", type text}, {"WarehouseID", type text}, {"ChannelID", type text}, {"QuantityOrdered", Int64.Type}, {"PotentialDemand", Int64.Type}, {"QuantitySold", Int64.Type}, {"LostSalesQty", Int64.Type}, {"UnitPrice", type number}, {"DiscountPct", type number}, {"GrossRevenue", type number}, {"DiscountAmount", type number}, {"NetRevenue", type number}, {"UnitCost", type number}, {"COGS", type number}, {"GrossProfit", type number}, {"GrossMarginPct", type number}}, "en-US"),
+				    #"Merged Queries" = Table.NestedJoin(#"Changed column type", {"DateKey"}, DimDate, {"DateKey"}, "DimDate", JoinKind.LeftOuter),
+				    #"Expanded DimDate" = Table.ExpandTableColumn(#"Merged Queries", "DimDate", {"Date", "Year", "WeekNo"}, {"DimDate.Date", "DimDate.Year", "DimDate.WeekNo"}),
+				    #"Added Custom" = Table.AddColumn(#"Expanded DimDate", "WeekKey", each [DimDate.Year]*100+[DimDate.WeekNo]),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Added Custom",{"SKU", "WeekKey", "QuantitySold"}),
+				    #"Grouped Rows" = Table.Group(#"Removed Other Columns", {"SKU", "WeekKey"}, {{"Quantity_Sold", each List.Sum([QuantitySold]), type nullable number}})
+				in
+				    #"Grouped Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

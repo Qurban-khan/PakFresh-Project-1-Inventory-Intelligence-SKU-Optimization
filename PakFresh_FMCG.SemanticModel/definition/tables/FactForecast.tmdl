@@ -1,0 +1,66 @@
+table FactForecast
+	lineageTag: ad3bff4a-d42f-4d1e-aa8b-a19bec5bddc4
+
+	column ForecastID
+		dataType: string
+		lineageTag: 0f983937-5870-44ce-8a50-8006cd3215c9
+		summarizeBy: none
+		sourceColumn: ForecastID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: fa7bbe28-afcb-4acd-b913-b3361df7ee2d
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column ForecastMonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 899a202e-7ebb-4236-a682-8c27eecf1fed
+		summarizeBy: none
+		sourceColumn: ForecastMonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ForecastHorizonMonths
+		dataType: int64
+		formatString: 0
+		lineageTag: 6118a71a-a9a2-464c-ae7d-005d43203dbe
+		summarizeBy: sum
+		sourceColumn: ForecastHorizonMonths
+
+		annotation SummarizationSetBy = Automatic
+
+	column ForecastQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 4ae33a0b-b619-4252-a7d2-ba948bd97ec1
+		summarizeBy: sum
+		sourceColumn: ForecastQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActualQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d137216-74eb-4ffb-8c64-bd313ae092a4
+		summarizeBy: sum
+		sourceColumn: ActualQty
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactForecast = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\FactForecast.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "FactForecast", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"ForecastID", type text}, {"SKU", type text}, {"ForecastMonthKey", Int64.Type}, {"ForecastHorizonMonths", Int64.Type}, {"ForecastQty", Int64.Type}, {"ActualQty", Int64.Type}}, "en-US")
+				in
+				  #"Changed column type"
+

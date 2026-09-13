@@ -1,0 +1,309 @@
+table DimProduct
+	lineageTag: 43963aca-f26f-4a92-81a5-2a00c7e05627
+
+	measure 'Excess Inventory Flag' =
+			
+			IF([Stock Cover Days] > SELECTEDVALUE(DimProduct[Target Cover Days]) * 1.5, 1, 0)
+		formatString: 0
+		lineageTag: 519ffdbf-bd41-46d1-95b5-a0a3226a409c
+
+	measure 'Excess Inventory Value' =
+			
+			SUMX(
+			    VALUES(DimProduct[SKU]),
+			    IF([Excess Inventory Flag] = 1, [Avg Inventory Value])
+			)
+		lineageTag: 472a64a8-ae26-4ec8-9a48-38bfb8f4e14f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SKU
+		dataType: string
+		lineageTag: 2acdd79b-8966-447c-9e61-3cfa40c9143e
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 19fe93ca-bdf1-42f4-afb8-d7d4becac10e
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: acca9eb1-ed55-4c10-a1bd-2bcfd61d354c
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: ea096ee3-0920-49bb-9457-9c48e5c7d463
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategory
+		dataType: string
+		lineageTag: 0a407c24-d41a-48cf-81c3-515db1edd8dd
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column PackSize
+		dataType: int64
+		formatString: 0
+		lineageTag: bd413cdb-8091-42b3-a8ec-bb9c38e49035
+		summarizeBy: sum
+		sourceColumn: PackSize
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: e2572ba9-a478-4236-accd-db701fdb522e
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitsPerCarton
+		dataType: int64
+		formatString: 0
+		lineageTag: 2aee09aa-62e0-47ce-81f4-d540f130ad53
+		summarizeBy: sum
+		sourceColumn: UnitsPerCarton
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitCost
+		dataType: double
+		lineageTag: c1403e64-387e-4ec3-b15d-f33883abb9f0
+		summarizeBy: sum
+		sourceColumn: UnitCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column StandardPrice
+		dataType: double
+		lineageTag: ef56fcac-b421-47b8-b33c-6827d6aa059c
+		summarizeBy: sum
+		sourceColumn: StandardPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SupplierID
+		dataType: string
+		lineageTag: ceb9ed93-517e-45db-b1e0-3c9a20c0ac49
+		summarizeBy: none
+		sourceColumn: SupplierID
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeDays
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bc8bdda-a444-478b-9fea-e0c3f796241d
+		summarizeBy: sum
+		sourceColumn: LeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column MOQ
+		dataType: int64
+		formatString: 0
+		lineageTag: 4224a68e-e72b-4f14-9cca-23368fab2d60
+		summarizeBy: sum
+		sourceColumn: MOQ
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShelfLifeDays
+		dataType: int64
+		formatString: 0
+		lineageTag: bbfa938f-7452-4c36-9449-4afc86673f8d
+		summarizeBy: sum
+		sourceColumn: ShelfLifeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column LaunchDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 21ad218b-b534-44ca-ad88-8d018e3fb6dd
+		summarizeBy: none
+		sourceColumn: LaunchDate
+
+		variation Variation
+			isDefault
+			relationship: a6d0394a-6113-46a4-959a-ef0544498234
+			defaultHierarchy: LocalDateTable_773f8e7f-9441-411e-aaed-03cecf23363a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ActiveFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e7f30a7-8a11-4727-8ee2-ccb414fa2bb3
+		summarizeBy: sum
+		sourceColumn: ActiveFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column BaseDailyDemand
+		dataType: double
+		lineageTag: 56feeb95-d665-4e9f-a431-f4c80a9f2e4b
+		summarizeBy: sum
+		sourceColumn: BaseDailyDemand
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DemandClass
+		dataType: string
+		lineageTag: 20fe1dc1-bd88-484d-bb34-86221c37bba7
+		summarizeBy: none
+		sourceColumn: DemandClass
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SKU Revenue' = CALCULATE(SUM(FactSales[NetRevenue]))
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 8eec8d3b-5e35-40dc-9ed2-0049afa53041
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Profit Rank' = RANKX(DimProduct,DimProduct[SKU Profit],,DESC,Dense)
+		formatString: 0
+		lineageTag: 217c68a8-2423-4ce3-9c74-5365fc5e17c3
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cumulatative Profit' = SUMX(FILTER(ALL(DimProduct),DimProduct[Profit Rank] <= EARLIER(DimProduct[Profit Rank])), DimProduct[SKU Profit])
+		formatString: #,0.0
+		lineageTag: 3ed775e5-0524-44b8-9ca7-f9bd1638ed4b
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cumulative Profit %' = DIVIDE(DimProduct[Cumulatative Profit], SUMX(ALL(DimProduct),DimProduct[SKU Profit]))
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		lineageTag: 71933878-9304-4f9b-bfdf-0926afb29ece
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column ABC = IF(DimProduct[Cumulative Profit %] <=.80, "A", IF(DimProduct[Cumulative Profit %] <= .95, "B", "C"))
+		lineageTag: da9ed87e-d78a-48f9-96c3-b9da6b0c2eba
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SKU Profit' = CALCULATE(SUM(FactSales[GrossProfit]), ALL(FactSales[SKU]))
+		lineageTag: 707c726f-3a91-43c5-823b-87eb20c3cb05
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Cumulative SKU %' = DimProduct[Profit Rank] / COUNTROWS(ALL(DimProduct))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3218a186-4b39-4ab5-a4b2-0df454214598
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Demand Mean'
+		dataType: double
+		lineageTag: 1308ceaf-9ee3-4b10-8997-9e7a5dcba344
+		summarizeBy: sum
+		sourceColumn: Demand Mean
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Demand StdDev'
+		dataType: double
+		lineageTag: 58528160-4048-4efa-9ed4-39ef9ab2cf51
+		summarizeBy: sum
+		sourceColumn: Demand StdDev
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CV
+		dataType: double
+		lineageTag: 922808c0-42bd-4622-8387-ac8c7966d005
+		summarizeBy: sum
+		sourceColumn: CV
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column XYZ = IF(DimProduct[CV]<=.6,"X",IF(DimProduct[CV]<=.74,"Y","Z"))
+		lineageTag: 04b53937-cb31-4432-9acc-a5652a0d60f1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column ABCXYZ = DimProduct[ABC]&DimProduct[XYZ]
+		lineageTag: 13cdc7dc-663b-4af3-ad25-9e047f7312a1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Target Cover Days' =
+			
+			DimProduct[LeadTimeDays] +
+			SWITCH(
+			    DimProduct[DemandClass],
+			    "Fast", 10,
+			    "Medium", 14,
+			    "Slow", 21,
+			    "Very Slow", 30
+			)
+		formatString: 0
+		lineageTag: 9543a08d-fbdd-4445-9a1d-cc52de4c99c4
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProduct = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("D:\New Work\2. Job\Supply Chain Data Analyst\Projects\3 projects\PakFresh_FMCG_Master_Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimProduct", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"SKU", type text}, {"ProductName", type text}, {"Brand", type text}, {"Category", type text}, {"Subcategory", type text}, {"PackSize", Int64.Type}, {"UOM", type text}, {"UnitsPerCarton", Int64.Type}, {"UnitCost", type number}, {"StandardPrice", type number}, {"SupplierID", type text}, {"LeadTimeDays", Int64.Type}, {"MOQ", Int64.Type}, {"ShelfLifeDays", Int64.Type}, {"LaunchDate", type date}, {"ActiveFlag", Int64.Type}, {"BaseDailyDemand", type number}, {"DemandClass", type text}}, "en-US"),
+				    #"Merged Queries" = Table.NestedJoin(#"Changed column type", {"SKU"}, SKUDemandStats, {"SKU"}, "SKUDemandStats", JoinKind.LeftOuter),
+				    #"Expanded SKUDemandStats" = Table.ExpandTableColumn(#"Merged Queries", "SKUDemandStats", {"Demand Mean", "Demand StdDev"}, {"Demand Mean", "Demand StdDev"}),
+				    #"Added Custom" = Table.AddColumn(#"Expanded SKUDemandStats", "CV", each [Demand StdDev] / [Demand Mean]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom",{{"CV", type number}, {"Demand Mean", type number}, {"Demand StdDev", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

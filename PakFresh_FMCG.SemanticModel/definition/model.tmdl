@@ -1,0 +1,38 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["FactSales","FactForecast","FactInventory","FactPromotions","FactPurchaseOrders","DimDate","DimMonth","DimWarehouse","DimChannel","DimSupplier","DimCustomer","DimProduct","WeeklySalesbySKU","SKUDemandStats"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table FactSales
+ref table FactForecast
+ref table FactInventory
+ref table FactPromotions
+ref table FactPurchaseOrders
+ref table DimDate
+ref table DateTableTemplate_bf507ffa-ccc5-4f2f-88ce-9cfd8b744498
+ref table LocalDateTable_edcf435b-39c8-4139-8dcb-99868523175c
+ref table DimMonth
+ref table DimWarehouse
+ref table DimChannel
+ref table DimSupplier
+ref table LocalDateTable_428c08a2-55f8-43e8-9125-a7b67732cb42
+ref table LocalDateTable_b877450f-1674-489f-ab0f-988124e982d9
+ref table DimCustomer
+ref table LocalDateTable_f33def01-ef27-441b-b540-bf2c4ea9dada
+ref table DimProduct
+ref table LocalDateTable_773f8e7f-9441-411e-aaed-03cecf23363a
+ref table WeeklySalesbySKU
+ref table SKUDemandStats
+
+ref cultureInfo en-US
+
